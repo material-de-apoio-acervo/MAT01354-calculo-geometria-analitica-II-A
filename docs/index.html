@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cálculo e Geometria Analítica II-A (MAT01354)</title>
+<style>
+  :root {
+    --bg: #f7f7f5;
+    --card-bg: #ffffff;
+    --text: #1f2430;
+    --muted: #6b7280;
+    --navy: #14285a;
+    --navy-soft: #eef1fa;
+    --gold: #b07814;
+    --border: #e5e5e0;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #14171c;
+      --card-bg: #1c2028;
+      --text: #e8e8e6;
+      --muted: #9aa0aa;
+      --navy: #7d93e0;
+      --navy-soft: #1e2536;
+      --gold: #d8a94a;
+      --border: #2b303a;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+    line-height: 1.5;
+  }
+  header {
+    padding: 3rem 1.5rem 2rem;
+    text-align: center;
+  }
+  header .code {
+    display: inline-block;
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    color: var(--navy);
+    background: var(--navy-soft);
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+  }
+  header h1 {
+    margin: 0 0 0.4rem;
+    font-size: 1.7rem;
+  }
+  header p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+  main {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 1.5rem 4rem;
+  }
+  section {
+    margin-bottom: 2rem;
+  }
+  section h2 {
+    font-size: 1.05rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--muted);
+    margin: 0 0 0.75rem;
+  }
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--border);
+    text-decoration: none;
+    color: var(--text);
+  }
+  .item:last-child { border-bottom: none; }
+  .item .label {
+    font-weight: 600;
+  }
+  .item .sub {
+    font-size: 0.82rem;
+    color: var(--muted);
+  }
+  .item .tag {
+    flex-shrink: 0;
+    font-size: 0.78rem;
+    padding: 0.3rem 0.7rem;
+    border-radius: 999px;
+    font-weight: 600;
+  }
+  .tag.ready {
+    background: var(--navy-soft);
+    color: var(--navy);
+  }
+  .tag.pending {
+    background: transparent;
+    color: var(--muted);
+    border: 1px dashed var(--border);
+  }
+  a.item[href="#"] {
+    cursor: default;
+    opacity: 0.6;
+  }
+  footer {
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.8rem;
+    padding-bottom: 2rem;
+  }
+  footer a { color: var(--navy); }
+</style>
+</head>
+<body>
+
+<header>
+  <span class="code">MAT01354 · IME-UFRGS</span>
+  <h1>Cálculo e Geometria Analítica II-A</h1>
+  <p>Material de estudo próprio, produzido a partir das aulas do curso.</p>
+</header>
+
+<main>
+  <section>
+    <h2>Apostila</h2>
+    <div class="card">
+      <a class="item" href="#">
+        <div>
+          <div class="label">Apostila consolidada</div>
+          <div class="sub">Ainda não publicada</div>
+        </div>
+        <span class="tag pending">em breve</span>
+      </a>
+    </div>
+  </section>
+
+  <section>
+    <h2>Listas de exercícios</h2>
+    <div class="card">
+      <a class="item" href="#">
+        <div>
+          <div class="label">Lista 1 — resolução</div>
+          <div class="sub">Ainda não publicada</div>
+        </div>
+        <span class="tag pending">em breve</span>
+      </a>
+      <a class="item" href="#">
+        <div>
+          <div class="label">Lista 1 — questões inéditas</div>
+          <div class="sub">Ainda não publicada</div>
+        </div>
+        <span class="tag pending">em breve</span>
+      </a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  Parte do <a href="https://material-de-apoio-acervo.github.io/material-de-apoio-acervo/">Material de Apoio — acervo</a>
+</footer>
+
+</body>
+</html>

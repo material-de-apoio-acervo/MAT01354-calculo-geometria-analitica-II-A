@@ -1,0 +1,8 @@
+# Só o conteúdo de docs/ (PDFs finais) é público neste repositório.
+# Tudo que é produção (fotos, PDFs originais, fontes .tex, dados brutos)
+# fica só local — nunca deve ser versionado aqui.
+/*
+!docs/
+!docs/**
+!.gitignore
+!README.md
