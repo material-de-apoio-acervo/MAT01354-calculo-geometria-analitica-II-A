@@ -130,6 +130,14 @@
   }
   footer a { color: var(--navy); }
 </style>
+<script>
+  // ==== CONFIGURAÇÃO DE VISIBILIDADE ====
+  // Mude true/false aqui e publique (git push) para mostrar/esconder itens.
+  // Não precisa editar o HTML das listas — só estas linhas.
+  const LISTAS_SECAO_VISIVEL     = false; // bloco inteiro "Listas de exercícios"
+  const LISTA1_RESOLUCAO_VISIVEL = true;  // Lista 1 — resolução
+  const LISTA1_INEDITAS_VISIVEL  = true;  // Lista 1 — questões inéditas
+</script>
 </head>
 <body>
 
@@ -138,6 +146,7 @@
   <h1>Cálculo e Geometria Analítica II-A</h1>
   <p>Material de estudo próprio, produzido a partir das aulas do curso.</p>
   <p class="profs">Professores: Arthur Miranda do Espírito Santo · Julio Cesar Lombaldo Fernandes</p>
+  <p class="profs">Semestre: 2026/2</p>
 </header>
 
 <main>
@@ -154,17 +163,17 @@
     </div>
   </section>
 
-  <section>
+  <section id="secao-listas">
     <h2>Listas de exercícios</h2>
     <div class="card">
-      <a class="item" href="listas/Lista 1 - resolução.pdf">
+      <a class="item" id="lista1-resolucao" href="listas/Lista 1 - resolução.pdf">
         <div>
           <div class="label">Lista 1 — resolução</div>
           <div class="sub">Enunciado resolvido passo a passo</div>
         </div>
         <span class="tag ready">PDF</span>
       </a>
-      <a class="item" href="listas/Lista 1 - inéditas.pdf">
+      <a class="item" id="lista1-ineditas" href="listas/Lista 1 - inéditas.pdf">
         <div>
           <div class="label">Lista 1 — questões inéditas</div>
           <div class="sub">Questões inéditas com gabarito</div>
@@ -174,6 +183,13 @@
     </div>
   </section>
 </main>
+
+<script>
+  // Aplica a configuração de visibilidade definida no <head>.
+  if (!LISTA1_RESOLUCAO_VISIVEL) document.getElementById('lista1-resolucao')?.remove();
+  if (!LISTA1_INEDITAS_VISIVEL) document.getElementById('lista1-ineditas')?.remove();
+  if (!LISTAS_SECAO_VISIVEL) document.getElementById('secao-listas')?.remove();
+</script>
 
 <footer>
   Parte do <a href="https://material-de-apoio-acervo.github.io/material-de-apoio-acervo/">Material de Apoio — acervo</a>
