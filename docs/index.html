@@ -152,6 +152,12 @@
   const LISTAS_SECAO_VISIVEL     = false; // bloco inteiro "Listas de exercícios"
   const LISTA1_RESOLUCAO_VISIVEL = true;  // Lista 1 — resolução
   const LISTA1_INEDITAS_VISIVEL  = true;  // Lista 1 — questões inéditas
+
+  // Versão de publicação (cache-busting): mude este valor sempre que substituir
+  // QUALQUER PDF (apostila ou lista) e publicar. Isso força os navegadores/celulares
+  // dos alunos a baixarem o arquivo novo em vez de usar uma cópia antiga em cache.
+  // Sugestão: usar a data de hoje no formato AAAAMMDD.
+  const VERSAO_PUBLICACAO = "20260821";
 </script>
 </head>
 <body>
@@ -208,6 +214,12 @@
   if (!LISTA1_RESOLUCAO_VISIVEL) document.getElementById('lista1-resolucao')?.remove();
   if (!LISTA1_INEDITAS_VISIVEL) document.getElementById('lista1-ineditas')?.remove();
   if (!LISTAS_SECAO_VISIVEL) document.getElementById('secao-listas')?.remove();
+
+  // Cache-busting: acrescenta ?v=VERSAO_PUBLICACAO em todo link de PDF,
+  // forçando o navegador a buscar o arquivo novo em vez de usar cache antigo.
+  document.querySelectorAll('a.item[href$=".pdf"]').forEach((a) => {
+    a.href = a.getAttribute('href') + '?v=' + VERSAO_PUBLICACAO;
+  });
 </script>
 
 <footer>
