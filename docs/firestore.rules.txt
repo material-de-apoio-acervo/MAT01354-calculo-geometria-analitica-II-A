@@ -1,10 +1,9 @@
 // Regras de segurança do Firestore para o controle de acesso à apostila (MAT01354).
 //
-// COMO APLICAR: Firebase Console → Firestore Database → aba "Regras" → colar isto
-// substituindo o conteúdo atual → Publicar.
-//
-// Este arquivo é só texto de referência (não é lido pelo código do site) — fica aqui
-// versionado pra não se perder e pra ficar claro o que está valendo em produção.
+// Este arquivo é só uma cópia de leitura (não é lida pelo deploy). A versão real
+// que vale em produção fica em `firestore.rules` (raiz do projeto, fora do git
+// pelo .gitignore) e é publicada via:
+//   firebase deploy --only firestore:rules --project material-de-apoio-37f72
 
 rules_version = '2';
 
@@ -26,9 +25,20 @@ service cloud.firestore {
                        request.resource.data.status == "pendente" &&
                        request.resource.data.email == request.auth.token.email;
 
-      // Atualização (aprovar/recusar/revogar): só o admin.
+      // Atualização (aprovar/recusar/revogar): o admin pode sempre.
+      // O próprio aluno pode reabrir um pedido recusado/revogado, mas só
+      // devolvendo o status pra "pendente" (nunca se auto-aprovando).
       allow update: if request.auth != null &&
-                       request.auth.token.email == "materiaisestudo.apoio@gmail.com";
+                       (
+                         request.auth.token.email == "materiaisestudo.apoio@gmail.com"
+                         ||
+                         (
+                           request.auth.uid == uid &&
+                           resource.data.status in ["recusado", "revogado"] &&
+                           request.resource.data.status == "pendente" &&
+                           request.resource.data.email == request.auth.token.email
+                         )
+                       );
 
       // Nunca deletar pedidos (histórico fica registrado).
       allow delete: if false;

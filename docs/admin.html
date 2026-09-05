@@ -148,6 +148,11 @@
       <h2>Recusados</h2>
       <div class="card" id="lista-recusados"><div class="empty">Carregando…</div></div>
     </section>
+
+    <section>
+      <h2>Revogados</h2>
+      <div class="card" id="lista-revogados"><div class="empty">Carregando…</div></div>
+    </section>
   </div>
 </main>
 
@@ -200,15 +205,17 @@
   async function carregarListas() {
     const acessosRef = collection(db, 'acessos');
 
-    const [pendSnap, aproSnap, recuSnap] = await Promise.all([
+    const [pendSnap, aproSnap, recuSnap, revoSnap] = await Promise.all([
       getDocs(query(acessosRef, where('status', '==', 'pendente'))),
       getDocs(query(acessosRef, where('status', '==', 'aprovado'))),
       getDocs(query(acessosRef, where('status', '==', 'recusado'))),
+      getDocs(query(acessosRef, where('status', '==', 'revogado'))),
     ]);
 
     const pendentesEl = document.getElementById('lista-pendentes');
     const aprovadosEl = document.getElementById('lista-aprovados');
     const recusadosEl = document.getElementById('lista-recusados');
+    const revogadosEl = document.getElementById('lista-revogados');
 
     pendentesEl.innerHTML = pendSnap.empty ? '<div class="empty">Nenhum pedido pendente.</div>' :
       pendSnap.docs.map(s => linhaHtml(s.id, s.data(),
@@ -221,6 +228,10 @@
 
     recusadosEl.innerHTML = recuSnap.empty ? '<div class="empty">Nenhum pedido recusado.</div>' :
       recuSnap.docs.map(s => linhaHtml(s.id, s.data(),
+        `<button class="btn aprovar" data-acao="aprovar">Aprovar</button>`)).join('');
+
+    revogadosEl.innerHTML = revoSnap.empty ? '<div class="empty">Nenhum acesso revogado.</div>' :
+      revoSnap.docs.map(s => linhaHtml(s.id, s.data(),
         `<button class="btn aprovar" data-acao="aprovar">Aprovar</button>`)).join('');
 
     document.querySelectorAll('[data-acao]').forEach(btn => {
