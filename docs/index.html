@@ -257,7 +257,7 @@
     getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged
   } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
   import {
-    getFirestore, doc, getDoc, setDoc, serverTimestamp
+    getFirestore, doc, getDoc, setDoc, updateDoc, serverTimestamp
   } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
   const app = initializeApp(firebaseConfig);
@@ -315,18 +315,18 @@
              data-goatcounter-click="download-apostila" data-goatcounter-title="download: apostila">Baixar apostila</a>
           ${linhaSair()}
         `);
-      } else if (d.status === 'recusado') {
+      } else if (d.status === 'recusado' || d.status === 'revogado') {
+        const titulo = d.status === 'recusado' ? 'Pedido não aprovado' : 'Acesso revogado';
         render(`
-          <div class="label">Pedido não aprovado</div>
-          <div class="sub">Fale com o organizador se achar que isso é um engano.</div>
+          <div class="label">${titulo}</div>
+          <div class="sub">Fale com o organizador se achar que isso é um engano, ou solicite novamente.</div>
+          <button class="btn secondary" id="btn-solicitar-de-novo">Solicitar novamente</button>
           ${linhaSair()}
         `);
-      } else if (d.status === 'revogado') {
-        render(`
-          <div class="label">Acesso revogado</div>
-          <div class="sub">Fale com o organizador se achar que isso é um engano.</div>
-          ${linhaSair()}
-        `);
+        document.getElementById('btn-solicitar-de-novo').onclick = async () => {
+          await updateDoc(ref, { status: 'pendente', data: serverTimestamp() });
+          renderEstado(user);
+        };
       } else {
         render(`
           <div class="label">Pedido enviado ⏳</div>
