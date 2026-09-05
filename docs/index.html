@@ -144,6 +144,32 @@
     padding-bottom: 2rem;
   }
   footer a { color: var(--navy); }
+  .btn {
+    display: inline-block;
+    font: inherit;
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 0.55rem 1.1rem;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    background: var(--navy);
+    color: #fff;
+  }
+  .btn:disabled { opacity: 0.6; cursor: default; }
+  .btn.secondary {
+    background: transparent;
+    color: var(--navy);
+    border: 1px solid var(--border);
+  }
+  #apostila-status .label { margin-bottom: 0.4rem; }
+  #apostila-status .sub { margin-bottom: 0.75rem; }
+  #apostila-status .linha-sair {
+    margin-top: 0.6rem;
+    font-size: 0.78rem;
+  }
+  #apostila-status .linha-sair a { color: var(--muted); }
 </style>
 <script>
   // ==== CONFIGURAÇÃO DE VISIBILIDADE ====
@@ -175,10 +201,10 @@
 <main>
   <section>
     <h2>Apostila</h2>
-    <div class="card" style="border-color: #c0392b;">
+    <div class="card">
       <div class="item" style="cursor: default; justify-content: center; text-align: center;">
-        <div>
-          <div class="label">O download da apostila foi desativado.</div>
+        <div id="apostila-status">
+          <div class="label">Carregando…</div>
         </div>
       </div>
     </div>
@@ -223,6 +249,99 @@
 <footer>
   Parte do <a href="https://material-de-apoio-acervo.github.io/material-de-apoio-acervo/">Material de Apoio — acervo</a>
 </footer>
+
+<script src="firebase-config.js"></script>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
+  import {
+    getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged
+  } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+  import {
+    getFirestore, doc, getDoc, setDoc, serverTimestamp
+  } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+  const provider = new GoogleAuthProvider();
+
+  const statusEl = document.getElementById('apostila-status');
+
+  function render(html) {
+    statusEl.innerHTML = html;
+  }
+
+  function linhaSair() {
+    return `<div class="linha-sair"><a href="#" id="btn-sair">sair</a></div>`;
+  }
+
+  async function renderEstado(user) {
+    if (!user) {
+      render(`
+        <div class="label">Acesso à apostila mediante aprovação</div>
+        <div class="sub">Entre com sua conta Google para solicitar acesso.</div>
+        <button class="btn" id="btn-entrar">Entrar com Google</button>
+      `);
+      document.getElementById('btn-entrar').onclick = () => signInWithPopup(auth, provider);
+      return;
+    }
+
+    const ref = doc(db, 'acessos', user.uid);
+    const snap = await getDoc(ref);
+
+    if (!snap.exists()) {
+      render(`
+        <div class="label">Olá, ${user.displayName?.split(' ')[0] ?? ''}!</div>
+        <div class="sub">Você ainda não solicitou acesso à apostila.</div>
+        <button class="btn" id="btn-solicitar">Solicitar acesso</button>
+        ${linhaSair()}
+      `);
+      document.getElementById('btn-solicitar').onclick = async () => {
+        await setDoc(ref, {
+          nome: user.displayName || '',
+          email: user.email || '',
+          status: 'pendente',
+          data: serverTimestamp(),
+        });
+        renderEstado(user);
+      };
+    } else {
+      const d = snap.data();
+      if (d.status === 'aprovado') {
+        render(`
+          <div class="label">Acesso aprovado ✅</div>
+          <div class="sub">Bem-vindo(a) de volta, ${user.displayName?.split(' ')[0] ?? ''}.</div>
+          <a class="btn" href="${DRIVE_FOLDER_URL}" target="_blank" rel="noopener"
+             data-goatcounter-click="download-apostila" data-goatcounter-title="download: apostila">Baixar apostila</a>
+          ${linhaSair()}
+        `);
+      } else if (d.status === 'recusado') {
+        render(`
+          <div class="label">Pedido não aprovado</div>
+          <div class="sub">Fale com o professor/monitor se achar que isso é um engano.</div>
+          ${linhaSair()}
+        `);
+      } else if (d.status === 'revogado') {
+        render(`
+          <div class="label">Acesso revogado</div>
+          <div class="sub">Fale com o professor/monitor se achar que isso é um engano.</div>
+          ${linhaSair()}
+        `);
+      } else {
+        render(`
+          <div class="label">Pedido enviado ⏳</div>
+          <div class="sub">Aguardando aprovação do professor/monitor.</div>
+          ${linhaSair()}
+        `);
+      }
+    }
+
+    const sair = document.getElementById('btn-sair');
+    if (sair) sair.onclick = (e) => { e.preventDefault(); signOut(auth); };
+  }
+
+  onAuthStateChanged(auth, renderEstado);
+</script>
 
 </body>
 </html>

@@ -1,0 +1,42 @@
+// Regras de segurança do Firestore para o controle de acesso à apostila (MAT01354).
+//
+// COMO APLICAR: Firebase Console → Firestore Database → aba "Regras" → colar isto
+// substituindo o conteúdo atual → Publicar.
+//
+// Este arquivo é só texto de referência (não é lido pelo código do site) — fica aqui
+// versionado pra não se perder e pra ficar claro o que está valendo em produção.
+
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    match /acessos/{uid} {
+
+      // Leitura: o próprio aluno pode ler o status do seu pedido;
+      // o admin pode ler qualquer pedido (pra montar a lista do painel).
+      allow read: if request.auth != null &&
+                     (request.auth.uid == uid ||
+                      request.auth.token.email == "materiaisestudo.apoio@gmail.com");
+
+      // Criação: só o próprio aluno cria o próprio pedido, e só com status "pendente"
+      // (impede que ele já crie se auto-aprovando).
+      allow create: if request.auth != null &&
+                       request.auth.uid == uid &&
+                       request.resource.data.status == "pendente" &&
+                       request.resource.data.email == request.auth.token.email;
+
+      // Atualização (aprovar/recusar/revogar): só o admin.
+      allow update: if request.auth != null &&
+                       request.auth.token.email == "materiaisestudo.apoio@gmail.com";
+
+      // Nunca deletar pedidos (histórico fica registrado).
+      allow delete: if false;
+    }
+
+    // Qualquer outra coleção: bloqueada por padrão.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
