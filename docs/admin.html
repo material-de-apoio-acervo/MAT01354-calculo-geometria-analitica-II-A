@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='18' fill='%2314285a'/><text x='54' y='76' font-size='72' font-family='Georgia, Cambria, serif' font-style='italic' fill='%23ffffff' text-anchor='middle'>&#8747;</text></svg>">
+<title>Admin — MAT01354</title>
+<meta name="robots" content="noindex, nofollow">
+<style>
+  :root {
+    --bg: #f7f7f5;
+    --card-bg: #ffffff;
+    --text: #1f2430;
+    --muted: #6b7280;
+    --navy: #14285a;
+    --navy-soft: #eef1fa;
+    --gold: #b07814;
+    --border: #e5e5e0;
+    --ok: #1e7d34;
+    --warn: #b07814;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #14171c;
+      --card-bg: #1c2028;
+      --text: #e8e8e6;
+      --muted: #9aa0aa;
+      --navy: #7d93e0;
+      --navy-soft: #1e2536;
+      --gold: #d8a94a;
+      --border: #2b303a;
+      --ok: #5fbf7f;
+      --warn: #d8a94a;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+    line-height: 1.5;
+  }
+  header {
+    padding: 2rem 1.5rem 1.5rem;
+    text-align: center;
+  }
+  header h1 { margin: 0 0 0.3rem; font-size: 1.4rem; }
+  header p { margin: 0; color: var(--muted); font-size: 0.9rem; }
+  main {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 0 1.5rem 4rem;
+  }
+  section { margin-bottom: 2rem; }
+  section h2 {
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--muted);
+    margin: 0 0 0.75rem;
+  }
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.9rem 1.1rem;
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+  .row:last-child { border-bottom: none; }
+  .row .info .nome { font-weight: 600; }
+  .row .info .email { font-size: 0.82rem; color: var(--muted); }
+  .row .info .data { font-size: 0.75rem; color: var(--muted); }
+  .row .acoes { display: flex; gap: 0.5rem; flex-shrink: 0; }
+  .empty { padding: 1rem 1.1rem; color: var(--muted); font-size: 0.9rem; }
+  .btn {
+    font: inherit;
+    font-weight: 600;
+    font-size: 0.82rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 7px;
+    border: none;
+    cursor: pointer;
+  }
+  .btn.aprovar { background: var(--ok); color: #fff; }
+  .btn.recusar { background: #c0392b; color: #fff; }
+  .btn.revogar { background: transparent; color: #c0392b; border: 1px solid #c0392b; }
+  .btn.copiar { background: transparent; color: var(--navy); border: 1px solid var(--border); }
+  .btn.entrar { background: var(--navy); color: #fff; padding: 0.6rem 1.2rem; }
+  .aviso {
+    background: var(--navy-soft);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.9rem 1.1rem;
+    font-size: 0.85rem;
+    margin-bottom: 1.5rem;
+  }
+  .aviso a { color: var(--navy); }
+  #tela-login, #tela-negado { text-align: center; padding: 3rem 1rem; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Painel admin — MAT01354</h1>
+  <p>Aprovação de acesso à apostila</p>
+</header>
+
+<main>
+  <div id="tela-login" hidden>
+    <p>Entre com sua conta de administrador.</p>
+    <button class="btn entrar" id="btn-entrar">Entrar com Google</button>
+  </div>
+
+  <div id="tela-negado" hidden>
+    <p>Esta conta não tem permissão de administrador.</p>
+    <button class="btn entrar" id="btn-sair-negado">Sair</button>
+  </div>
+
+  <div id="tela-admin" hidden>
+    <div class="aviso">
+      ⚠️ <strong>Aprovar aqui NÃO libera o Drive sozinho.</strong> Depois de aprovar, adicione manualmente
+      o e-mail do aluno no compartilhamento da
+      <a id="link-drive" href="#" target="_blank" rel="noopener">pasta da apostila no Drive</a>
+      — são duas ações separadas.
+      <div style="margin-top:0.5rem;"><button class="btn entrar" id="btn-sair-admin" style="padding:0.4rem 0.9rem;">Sair</button></div>
+    </div>
+
+    <section>
+      <h2>Pendentes</h2>
+      <div class="card" id="lista-pendentes"><div class="empty">Carregando…</div></div>
+    </section>
+
+    <section>
+      <h2>Aprovados</h2>
+      <div class="card" id="lista-aprovados"><div class="empty">Carregando…</div></div>
+    </section>
+
+    <section>
+      <h2>Recusados</h2>
+      <div class="card" id="lista-recusados"><div class="empty">Carregando…</div></div>
+    </section>
+  </div>
+</main>
+
+<script src="firebase-config.js"></script>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
+  import {
+    getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged
+  } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+  import {
+    getFirestore, collection, query, where, getDocs, doc, updateDoc, orderBy
+  } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+  const provider = new GoogleAuthProvider();
+
+  const telaLogin = document.getElementById('tela-login');
+  const telaNegado = document.getElementById('tela-negado');
+  const telaAdmin = document.getElementById('tela-admin');
+  document.getElementById('link-drive').href = DRIVE_FOLDER_URL || '#';
+
+  document.getElementById('btn-entrar').onclick = () => signInWithPopup(auth, provider);
+  document.getElementById('btn-sair-negado').onclick = () => signOut(auth);
+  document.getElementById('btn-sair-admin').onclick = () => signOut(auth);
+
+  function mostrar(tela) {
+    telaLogin.hidden = tela !== 'login';
+    telaNegado.hidden = tela !== 'negado';
+    telaAdmin.hidden = tela !== 'admin';
+  }
+
+  function linhaHtml(id, d, botoes) {
+    const dataStr = d.data?.toDate ? d.data.toDate().toLocaleDateString('pt-BR') : '';
+    return `
+      <div class="row" data-uid="${id}">
+        <div class="info">
+          <div class="nome">${d.nome || '(sem nome)'}</div>
+          <div class="email">${d.email || ''}</div>
+          <div class="data">${dataStr}</div>
+        </div>
+        <div class="acoes">
+          <button class="btn copiar" data-copiar="${d.email || ''}">copiar e-mail</button>
+          ${botoes}
+        </div>
+      </div>`;
+  }
+
+  async function carregarListas() {
+    const acessosRef = collection(db, 'acessos');
+
+    const [pendSnap, aproSnap, recuSnap] = await Promise.all([
+      getDocs(query(acessosRef, where('status', '==', 'pendente'))),
+      getDocs(query(acessosRef, where('status', '==', 'aprovado'))),
+      getDocs(query(acessosRef, where('status', '==', 'recusado'))),
+    ]);
+
+    const pendentesEl = document.getElementById('lista-pendentes');
+    const aprovadosEl = document.getElementById('lista-aprovados');
+    const recusadosEl = document.getElementById('lista-recusados');
+
+    pendentesEl.innerHTML = pendSnap.empty ? '<div class="empty">Nenhum pedido pendente.</div>' :
+      pendSnap.docs.map(s => linhaHtml(s.id, s.data(),
+        `<button class="btn aprovar" data-acao="aprovar">Aprovar</button>
+         <button class="btn recusar" data-acao="recusar">Recusar</button>`)).join('');
+
+    aprovadosEl.innerHTML = aproSnap.empty ? '<div class="empty">Ninguém aprovado ainda.</div>' :
+      aproSnap.docs.map(s => linhaHtml(s.id, s.data(),
+        `<button class="btn revogar" data-acao="revogar">Revogar</button>`)).join('');
+
+    recusadosEl.innerHTML = recuSnap.empty ? '<div class="empty">Nenhum pedido recusado.</div>' :
+      recuSnap.docs.map(s => linhaHtml(s.id, s.data(),
+        `<button class="btn aprovar" data-acao="aprovar">Aprovar</button>`)).join('');
+
+    document.querySelectorAll('[data-acao]').forEach(btn => {
+      btn.onclick = async () => {
+        const uid = btn.closest('.row').dataset.uid;
+        const acao = btn.dataset.acao;
+        const novoStatus = acao === 'aprovar' ? 'aprovado' : acao === 'recusar' ? 'recusado' : 'revogado';
+        await updateDoc(doc(db, 'acessos', uid), { status: novoStatus });
+        carregarListas();
+      };
+    });
+
+    document.querySelectorAll('[data-copiar]').forEach(btn => {
+      btn.onclick = () => {
+        navigator.clipboard.writeText(btn.dataset.copiar);
+        btn.textContent = 'copiado!';
+        setTimeout(() => { btn.textContent = 'copiar e-mail'; }, 1500);
+      };
+    });
+  }
+
+  onAuthStateChanged(auth, (user) => {
+    if (!user) { mostrar('login'); return; }
+    if (!ADMIN_EMAILS.includes(user.email)) { mostrar('negado'); return; }
+    mostrar('admin');
+    carregarListas();
+  });
+</script>
+
+</body>
+</html>
