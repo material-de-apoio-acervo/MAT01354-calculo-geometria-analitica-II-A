@@ -117,6 +117,10 @@
 <main>
   <div id="tela-login" hidden>
     <p>Entre com sua conta de administrador.</p>
+    <p id="aviso-navegador" style="color:#c0392b; font-size:0.85rem; display:none;">
+      Se você abriu este link pelo WhatsApp/Instagram, o login do Google pode não
+      funcionar — abra no Chrome/Safari.
+    </p>
     <button class="btn entrar" id="btn-entrar">Entrar com Google</button>
   </div>
 
@@ -166,6 +170,16 @@
     getFirestore, collection, query, where, getDocs, doc, updateDoc, orderBy
   } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
+  // Escapa HTML antes de inserir em innerHTML -- defesa em profundidade contra
+  // XSS (a barreira de verdade já está nas regras do Firestore, que travam
+  // "nome" contra o valor real confirmado pelo Google; isto aqui é redundância
+  // proposital, caso um documento antigo/anômalo escape dessa validação).
+  function esc(s) {
+    return String(s ?? '').replace(/[&<>"']/g, c => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[c]));
+  }
+
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const db = getFirestore(app);
@@ -176,7 +190,14 @@
   const telaAdmin = document.getElementById('tela-admin');
   document.getElementById('link-drive').href = DRIVE_FOLDER_URL || '#';
 
-  document.getElementById('btn-entrar').onclick = () => signInWithPopup(auth, provider);
+  if (/FBAN|FBAV|Instagram|WhatsApp|Line\//i.test(navigator.userAgent || '')) {
+    document.getElementById('aviso-navegador').style.display = 'block';
+  }
+
+  document.getElementById('btn-entrar').onclick = () => signInWithPopup(auth, provider).catch((e) => {
+    console.error(e);
+    alert('Não foi possível entrar. Se você abriu este link pelo WhatsApp/Instagram, tente abrir no Chrome/Safari.');
+  });
   document.getElementById('btn-sair-negado').onclick = () => signOut(auth);
   document.getElementById('btn-sair-admin').onclick = () => signOut(auth);
 
@@ -191,12 +212,12 @@
     return `
       <div class="row" data-uid="${id}">
         <div class="info">
-          <div class="nome">${d.nome || '(sem nome)'}</div>
-          <div class="email">${d.email || ''}</div>
-          <div class="data">${dataStr}</div>
+          <div class="nome">${esc(d.nome) || '(sem nome)'}</div>
+          <div class="email">${esc(d.email)}</div>
+          <div class="data">${esc(dataStr)}</div>
         </div>
         <div class="acoes">
-          <button class="btn copiar" data-copiar="${d.email || ''}">copiar e-mail</button>
+          <button class="btn copiar" data-copiar="${esc(d.email)}">copiar e-mail</button>
           ${botoes}
         </div>
       </div>`;
@@ -204,13 +225,23 @@
 
   async function carregarListas() {
     const acessosRef = collection(db, 'acessos');
+    const porStatus = (s) => query(acessosRef, where('status', '==', s), orderBy('data', 'asc'));
 
-    const [pendSnap, aproSnap, recuSnap, revoSnap] = await Promise.all([
-      getDocs(query(acessosRef, where('status', '==', 'pendente'))),
-      getDocs(query(acessosRef, where('status', '==', 'aprovado'))),
-      getDocs(query(acessosRef, where('status', '==', 'recusado'))),
-      getDocs(query(acessosRef, where('status', '==', 'revogado'))),
-    ]);
+    let pendSnap, aproSnap, recuSnap, revoSnap;
+    try {
+      [pendSnap, aproSnap, recuSnap, revoSnap] = await Promise.all([
+        getDocs(porStatus('pendente')),
+        getDocs(porStatus('aprovado')),
+        getDocs(porStatus('recusado')),
+        getDocs(porStatus('revogado')),
+      ]);
+    } catch (e) {
+      console.error(e);
+      const erro = '<div class="empty">Erro ao carregar. Tente recarregar a página.</div>';
+      ['lista-pendentes', 'lista-aprovados', 'lista-recusados', 'lista-revogados']
+        .forEach(id => { document.getElementById(id).innerHTML = erro; });
+      return;
+    }
 
     const pendentesEl = document.getElementById('lista-pendentes');
     const aprovadosEl = document.getElementById('lista-aprovados');
@@ -239,8 +270,15 @@
         const uid = btn.closest('.row').dataset.uid;
         const acao = btn.dataset.acao;
         const novoStatus = acao === 'aprovar' ? 'aprovado' : acao === 'recusar' ? 'recusado' : 'revogado';
-        await updateDoc(doc(db, 'acessos', uid), { status: novoStatus });
-        carregarListas();
+        btn.disabled = true;
+        try {
+          await updateDoc(doc(db, 'acessos', uid), { status: novoStatus });
+          carregarListas();
+        } catch (e) {
+          console.error(e);
+          alert('Erro ao atualizar o pedido. Tente novamente.');
+          btn.disabled = false;
+        }
       };
     });
 
