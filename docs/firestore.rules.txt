@@ -4,6 +4,12 @@
 // que vale em produção fica em `firestore.rules` (raiz do projeto, fora do git
 // pelo .gitignore) e é publicada via:
 //   firebase deploy --only firestore:rules --project material-de-apoio-37f72
+//
+// ⚠️ O e-mail do admin está hardcoded abaixo (2x) E TAMBÉM em docs/firebase-config.js
+// (ADMIN_EMAILS). São duas fontes de verdade independentes: o config.js só controla
+// a UI (mostrar/esconder o painel); quem realmente autoriza é este arquivo. Se trocar
+// ou adicionar um admin, atualizar os DOIS lugares -- esquecer aqui deixa acesso
+// "fantasma" (a UI bloqueia, mas a regra ainda aceitaria).
 
 rules_version = '2';
 
@@ -18,16 +24,22 @@ service cloud.firestore {
                      (request.auth.uid == uid ||
                       request.auth.token.email == "materiaisestudo.apoio@gmail.com");
 
-      // Criação: só o próprio aluno cria o próprio pedido, e só com status "pendente"
-      // (impede que ele já crie se auto-aprovando).
+      // Criação: só o próprio aluno cria o próprio pedido, e só com status "pendente".
+      // "nome"/"email" precisam bater com o que o Google confirmou no token de auth
+      // (não é o aluno quem escolhe o texto) -- isso impede um "nome" malicioso
+      // (ex.: HTML/script) usado pra atacar quem for ler a lista de pedidos (XSS).
+      // hasOnly trava o documento a só esses 4 campos, sem extras arbitrários.
       allow create: if request.auth != null &&
                        request.auth.uid == uid &&
+                       request.resource.data.keys().hasOnly(["nome","email","status","data"]) &&
                        request.resource.data.status == "pendente" &&
-                       request.resource.data.email == request.auth.token.email;
+                       request.resource.data.email == request.auth.token.email &&
+                       request.resource.data.nome == request.auth.token.get('name', '');
 
       // Atualização (aprovar/recusar/revogar): o admin pode sempre.
       // O próprio aluno pode reabrir um pedido recusado/revogado, mas só
-      // devolvendo o status pra "pendente" (nunca se auto-aprovando).
+      // devolvendo o status pra "pendente" (nunca se auto-aprovando), com as
+      // mesmas travas de "nome"/"email"/schema da criação.
       allow update: if request.auth != null &&
                        (
                          request.auth.token.email == "materiaisestudo.apoio@gmail.com"
@@ -35,8 +47,10 @@ service cloud.firestore {
                          (
                            request.auth.uid == uid &&
                            resource.data.status in ["recusado", "revogado"] &&
+                           request.resource.data.keys().hasOnly(["nome","email","status","data"]) &&
                            request.resource.data.status == "pendente" &&
-                           request.resource.data.email == request.auth.token.email
+                           request.resource.data.email == request.auth.token.email &&
+                           request.resource.data.nome == request.auth.token.get('name', '')
                          )
                        );
 
