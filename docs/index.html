@@ -179,6 +179,13 @@
   const LISTA1_RESOLUCAO_VISIVEL = true;  // Lista 1 — resolução
   const LISTA1_INEDITAS_VISIVEL  = true;  // Lista 1 — questões inéditas
 
+  // Login Google + aprovação (Firebase) temporariamente desativado: a conta Google
+  // dedicada do curso foi suspensa pelo Google, então o login não funciona no
+  // momento. Enquanto isso não for resolvido, mostramos "download desativado" em
+  // vez de tentar o fluxo de login (evita erros pra todo mundo que visitar o site).
+  // Reativar trocando pra true assim que a conta for liberada.
+  const APOSTILA_LOGIN_ATIVO = false;
+
   // Versão de publicação (cache-busting): mude este valor sempre que substituir
   // QUALQUER PDF (apostila ou lista) e publicar. Isso força os navegadores/celulares
   // dos alunos a baixarem o arquivo novo em vez de usar uma cópia antiga em cache.
@@ -204,7 +211,7 @@
     <div class="card">
       <div class="item" style="cursor: default; justify-content: center; text-align: center;">
         <div id="apostila-status">
-          <div class="label">Carregando…</div>
+          <div class="label">O download da apostila foi desativado temporariamente.</div>
         </div>
       </div>
     </div>
@@ -252,13 +259,18 @@
 
 <script src="firebase-config.js"></script>
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
-  import {
+  // Login desativado (ver APOSTILA_LOGIN_ATIVO no <head>): todo o código abaixo
+  // que toca o Firebase fica dentro deste "if", pra não fazer nenhuma chamada
+  // (nem inicializar o app) enquanto a conta Google do curso estiver suspensa.
+  // Os imports em si só baixam o SDK (sem chamar nada), então são inofensivos.
+if (APOSTILA_LOGIN_ATIVO) {
+  const { initializeApp } = await import("https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js");
+  const {
     getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged
-  } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
-  import {
+  } = await import("https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js");
+  const {
     getFirestore, doc, getDoc, setDoc, updateDoc, serverTimestamp
-  } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+  } = await import("https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js");
 
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
@@ -392,6 +404,7 @@
   }
 
   onAuthStateChanged(auth, renderEstado);
+} // fim do if (APOSTILA_LOGIN_ATIVO)
 </script>
 
 </body>
