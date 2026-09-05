@@ -271,8 +271,33 @@
     statusEl.innerHTML = html;
   }
 
+  // Escapa HTML antes de inserir em innerHTML -- defesa em profundidade contra
+  // XSS (a barreira de verdade já está nas regras do Firestore, que travam
+  // "nome" contra o valor real confirmado pelo Google).
+  function esc(s) {
+    return String(s ?? '').replace(/[&<>"']/g, c => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[c]));
+  }
+
   function linhaSair() {
     return `<div class="linha-sair"><a href="#" id="btn-sair">sair</a></div>`;
+  }
+
+  // Navegadores embutidos (WhatsApp/Instagram/Facebook) costumam bloquear o
+  // login do Google por segurança -- avisamos o aluno em vez de deixar
+  // travar sem explicação.
+  function isInAppBrowser() {
+    return /FBAN|FBAV|Instagram|WhatsApp|Line\//i.test(navigator.userAgent || '');
+  }
+
+  function avisoNavegador() {
+    if (!isInAppBrowser()) return '';
+    return `<div class="sub" style="color:#c0392b;">
+      Parece que você abriu este link direto pelo WhatsApp/Instagram — o login do
+      Google pode não funcionar aqui. Toque em "⋮"/"Abrir no navegador" e escolha
+      Chrome ou Safari antes de entrar.
+    </div>`;
   }
 
   async function renderEstado(user) {
@@ -280,37 +305,56 @@
       render(`
         <div class="label">Acesso à apostila mediante aprovação</div>
         <div class="sub">Entre com sua conta Google para solicitar acesso.</div>
+        ${avisoNavegador()}
         <button class="btn" id="btn-entrar">Entrar com Google</button>
       `);
-      document.getElementById('btn-entrar').onclick = () => signInWithPopup(auth, provider);
+      document.getElementById('btn-entrar').onclick = () => signInWithPopup(auth, provider).catch((e) => {
+        console.error(e);
+        alert('Não foi possível entrar. Se você abriu este link pelo WhatsApp/Instagram, tente abrir no Chrome/Safari.');
+      });
       return;
     }
 
     const ref = doc(db, 'acessos', user.uid);
-    const snap = await getDoc(ref);
+    let snap;
+    try {
+      snap = await getDoc(ref);
+    } catch (e) {
+      console.error(e);
+      render(`<div class="label">Erro ao carregar</div><div class="sub">Tente recarregar a página.</div>${linhaSair()}`);
+      document.getElementById('btn-sair').onclick = (e2) => { e2.preventDefault(); signOut(auth); };
+      return;
+    }
 
     if (!snap.exists()) {
       render(`
-        <div class="label">Olá, ${user.displayName?.split(' ')[0] ?? ''}!</div>
+        <div class="label">Olá, ${esc(user.displayName?.split(' ')[0] ?? '')}!</div>
         <div class="sub">Você ainda não solicitou acesso à apostila.</div>
         <button class="btn" id="btn-solicitar">Solicitar acesso</button>
         ${linhaSair()}
       `);
-      document.getElementById('btn-solicitar').onclick = async () => {
-        await setDoc(ref, {
-          nome: user.displayName || '',
-          email: user.email || '',
-          status: 'pendente',
-          data: serverTimestamp(),
-        });
-        renderEstado(user);
+      document.getElementById('btn-solicitar').onclick = async (ev) => {
+        ev.target.disabled = true;
+        try {
+          await setDoc(ref, {
+            nome: user.displayName || '',
+            email: user.email || '',
+            status: 'pendente',
+            data: serverTimestamp(),
+          });
+          renderEstado(user);
+        } catch (e) {
+          console.error(e);
+          alert('Erro ao enviar o pedido. Tente novamente.');
+          ev.target.disabled = false;
+        }
       };
     } else {
       const d = snap.data();
       if (d.status === 'aprovado') {
         render(`
           <div class="label">Acesso aprovado ✅</div>
-          <div class="sub">Bem-vindo(a) de volta, ${user.displayName?.split(' ')[0] ?? ''}.</div>
+          <div class="sub">Bem-vindo(a) de volta, ${esc(user.displayName?.split(' ')[0] ?? '')}.</div>
           <a class="btn" href="${DRIVE_FOLDER_URL}" target="_blank" rel="noopener"
              data-goatcounter-click="download-apostila" data-goatcounter-title="download: apostila">Baixar apostila</a>
           ${linhaSair()}
@@ -323,9 +367,16 @@
           <button class="btn secondary" id="btn-solicitar-de-novo">Solicitar novamente</button>
           ${linhaSair()}
         `);
-        document.getElementById('btn-solicitar-de-novo').onclick = async () => {
-          await updateDoc(ref, { status: 'pendente', data: serverTimestamp() });
-          renderEstado(user);
+        document.getElementById('btn-solicitar-de-novo').onclick = async (ev) => {
+          ev.target.disabled = true;
+          try {
+            await updateDoc(ref, { status: 'pendente', data: serverTimestamp() });
+            renderEstado(user);
+          } catch (e) {
+            console.error(e);
+            alert('Erro ao enviar o pedido. Tente novamente.');
+            ev.target.disabled = false;
+          }
         };
       } else {
         render(`
