@@ -179,12 +179,10 @@
   const LISTA1_RESOLUCAO_VISIVEL = true;  // Lista 1 — resolução
   const LISTA1_INEDITAS_VISIVEL  = true;  // Lista 1 — questões inéditas
 
-  // Login Google + aprovação (Firebase) temporariamente desativado: a conta Google
-  // dedicada do curso foi suspensa pelo Google, então o login não funciona no
-  // momento. Enquanto isso não for resolvido, mostramos "download desativado" em
-  // vez de tentar o fluxo de login (evita erros pra todo mundo que visitar o site).
-  // Reativar trocando pra true assim que a conta for liberada.
-  const APOSTILA_LOGIN_ATIVO = false;
+  // Login Google + aprovação (Firebase). Foi desativado temporariamente em 05/09
+  // (conta Google do curso suspensa pelo Google) e reativado em 06/09 depois que
+  // a conta foi liberada. Ver BACKLOG.md item 5 se precisar desativar de novo.
+  const APOSTILA_LOGIN_ATIVO = true;
 
   // Versão de publicação (cache-busting): mude este valor sempre que substituir
   // QUALQUER PDF (apostila ou lista) e publicar. Isso força os navegadores/celulares
@@ -211,7 +209,7 @@
     <div class="card">
       <div class="item" style="cursor: default; justify-content: center; text-align: center;">
         <div id="apostila-status">
-          <div class="label">O download da apostila foi desativado temporariamente.</div>
+          <div class="label">Carregando…</div>
         </div>
       </div>
     </div>
