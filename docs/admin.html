@@ -208,7 +208,9 @@
   }
 
   function linhaHtml(id, d, botoes) {
-    const dataStr = d.data?.toDate ? d.data.toDate().toLocaleDateString('pt-BR') : '';
+    const dataStr = d.data?.toDate
+      ? d.data.toDate().toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' })
+      : '';
     return `
       <div class="row" data-uid="${id}">
         <div class="info">
