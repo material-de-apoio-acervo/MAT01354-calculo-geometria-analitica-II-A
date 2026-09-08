@@ -117,10 +117,6 @@
 <main>
   <div id="tela-login" hidden>
     <p>Entre com sua conta de administrador.</p>
-    <p id="aviso-navegador" style="color:#c0392b; font-size:0.85rem; display:none;">
-      Se você abriu este link pelo WhatsApp/Instagram, o login do Google pode não
-      funcionar — abra no Chrome/Safari.
-    </p>
     <button class="btn entrar" id="btn-entrar">Entrar com Google</button>
   </div>
 
@@ -190,13 +186,9 @@
   const telaAdmin = document.getElementById('tela-admin');
   document.getElementById('link-drive').href = DRIVE_FOLDER_URL || '#';
 
-  if (/FBAN|FBAV|Instagram|WhatsApp|Line\//i.test(navigator.userAgent || '')) {
-    document.getElementById('aviso-navegador').style.display = 'block';
-  }
-
   document.getElementById('btn-entrar').onclick = () => signInWithPopup(auth, provider).catch((e) => {
     console.error(e);
-    alert('Não foi possível entrar. Se você abriu este link pelo WhatsApp/Instagram, tente abrir no Chrome/Safari.');
+    alert('Não foi possível entrar. Tente novamente.');
   });
   document.getElementById('btn-sair-negado').onclick = () => signOut(auth);
   document.getElementById('btn-sair-admin').onclick = () => signOut(auth);
