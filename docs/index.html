@@ -215,6 +215,20 @@
     </div>
   </section>
 
+  <section id="secao-fotos-quadro" hidden>
+    <h2>Colabore com fotos do quadro</h2>
+    <div class="card">
+      <div class="item" style="cursor: default; justify-content: center; text-align: center;">
+        <div>
+          <div class="label">Tirou fotos do quadro numa aula?</div>
+          <div class="sub">Envie pelo formulário (fotos + data da aula) — ajuda a manter a apostila atualizada.</div>
+          <a class="btn secondary" id="link-form-fotos" href="#" target="_blank" rel="noopener"
+             data-goatcounter-click="form-fotos-quadro" data-goatcounter-title="clique: form-fotos-quadro">Enviar fotos do quadro</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section id="secao-listas">
     <h2>Listas de exercícios</h2>
     <div class="card">
@@ -295,6 +309,15 @@ if (APOSTILA_LOGIN_ATIVO) {
   }
 
   async function renderEstado(user) {
+    // "Colabore com fotos do quadro": visível pra qualquer aluno logado
+    // (independente de já ter acesso aprovado à apostila ou não), só some se
+    // o link do Form ainda não foi configurado.
+    const secaoFotos = document.getElementById('secao-fotos-quadro');
+    secaoFotos.hidden = !(user && FORM_FOTOS_QUADRO_URL);
+    if (user && FORM_FOTOS_QUADRO_URL) {
+      document.getElementById('link-form-fotos').href = FORM_FOTOS_QUADRO_URL;
+    }
+
     if (!user) {
       render(`
         <div class="label">Acesso à apostila mediante aprovação</div>
