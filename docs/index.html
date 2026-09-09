@@ -220,7 +220,7 @@
     <div class="card">
       <div class="item" style="cursor: default; justify-content: center; text-align: center;">
         <div>
-          <div class="label">Tirou fotos do quadro numa aula?</div>
+          <div class="label" id="label-fotos-quadro">Colabore com fotos do quadro</div>
           <div class="sub">Envie pelo formulário (fotos + data da aula) — ajuda a manter a apostila atualizada.</div>
           <a class="btn secondary" id="link-form-fotos" href="#" target="_blank" rel="noopener"
              data-goatcounter-click="form-fotos-quadro" data-goatcounter-title="clique: form-fotos-quadro">Enviar fotos do quadro</a>
@@ -316,6 +316,7 @@ if (APOSTILA_LOGIN_ATIVO) {
     secaoFotos.hidden = !(user && FORM_FOTOS_QUADRO_URL);
     if (user && FORM_FOTOS_QUADRO_URL) {
       document.getElementById('link-form-fotos').href = FORM_FOTOS_QUADRO_URL;
+      document.getElementById('label-fotos-quadro').textContent = FORM_FOTOS_QUADRO_LABEL || 'Colabore com fotos do quadro';
     }
 
     if (!user) {
