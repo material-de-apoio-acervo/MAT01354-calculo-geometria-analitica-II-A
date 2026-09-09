@@ -23,4 +23,4 @@ const DRIVE_FOLDER_URL = "https://drive.google.com/drive/folders/1_SQf0DSlcXqCp1
 // Link do Google Form onde os alunos enviam fotos do quadro (upload de arquivo +
 // data da aula). Preencher depois de criar o Form (ver BACKLOG.md). Vazio = a
 // seção "Colabore com fotos do quadro" fica escondida no site.
-const FORM_FOTOS_QUADRO_URL = "";
+const FORM_FOTOS_QUADRO_URL = "https://docs.google.com/forms/d/e/1FAIpQLScvMpLNqfFVojVqbPEI2i-90EBDUiSESbGUvkHczyKyMn455Q/viewform";
