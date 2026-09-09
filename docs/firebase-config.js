@@ -19,3 +19,8 @@ const ADMIN_EMAILS = ["materiaisestudo.apoio@gmail.com"];
 
 // Link da pasta do Google Drive (conta dedicada ao curso) onde a apostila fica.
 const DRIVE_FOLDER_URL = "https://drive.google.com/drive/folders/1_SQf0DSlcXqCp1dCxnARTh_1yHsfMAz8?usp=sharing";
+
+// Link do Google Form onde os alunos enviam fotos do quadro (upload de arquivo +
+// data da aula). Preencher depois de criar o Form (ver BACKLOG.md). Vazio = a
+// seção "Colabore com fotos do quadro" fica escondida no site.
+const FORM_FOTOS_QUADRO_URL = "";
