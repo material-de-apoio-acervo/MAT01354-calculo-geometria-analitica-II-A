@@ -1,8 +1,9 @@
 # Cálculo e Geometria Analítica II-A (MAT01354)
 
-Material de estudo próprio, produzido a partir das aulas do curso MAT01354 (IME-UFRGS).
+Este repositório hospeda apenas o GitHub Pages da página de solicitação de acesso ao material da disciplina MAT01354 (IME-UFRGS).
 
-📄 **Acesse os PDFs em:** https://material-de-apoio-acervo.github.io/MAT01354-calculo-geometria-analitica-II-A/
+🔗 **Página:** https://material-de-apoio-acervo.github.io/MAT01354-calculo-geometria-analitica-II-A/
 
-Este repositório contém apenas os PDFs finais (apostila consolidada e resoluções de listas).
-Materiais originais do professor (enunciados, fotos de aula) não são redistribuídos aqui.
+O conteúdo (apostila) não fica aqui: é compartilhado por uma pasta do Google Drive. Na página, o acesso é solicitado com login Google e liberado após aprovação; o painel de aprovação fica em `docs/admin.html`.
+
+Nenhum PDF ou material de aula é versionado neste repositório.
