@@ -5,388 +5,315 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='18' fill='%2314285a'/><text x='54' y='76' font-size='72' font-family='Georgia, Cambria, serif' font-style='italic' fill='%23ffffff' text-anchor='middle'>&#8747;</text></svg>">
 <title>Cálculo e Geometria Analítica II-A (MAT01354)</title>
-<meta name="description" content="Apostila de estudo própria — Turma E1 (seg/qua/sex 18h30-20h10), profs. Arthur Miranda e Julio Lombaldo. Semestre 2026/2.">
+<meta name="description" content="Apostilas de estudo próprias — Turma E1 (seg/qua/sex 18h30-20h10), profs. Arthur Miranda e Julio Lombaldo. Semestre 2026/2.">
+<meta name="theme-color" content="#12151c">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://material-de-apoio-acervo.github.io/MAT01354-calculo-geometria-analitica-II-A/">
 <meta property="og:title" content="Cálculo e Geometria Analítica II-A (MAT01354)">
-<meta property="og:description" content="Apostila de estudo própria — Turma E1 (seg/qua/sex 18h30-20h10), profs. Arthur Miranda e Julio Lombaldo. Semestre 2026/2.">
+<meta property="og:description" content="Apostilas de estudo próprias — Turma E1 (seg/qua/sex 18h30-20h10), profs. Arthur Miranda e Julio Lombaldo. Semestre 2026/2.">
 <meta property="og:image" content="https://material-de-apoio-acervo.github.io/MAT01354-calculo-geometria-analitica-II-A/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Cálculo e Geometria Analítica II-A (MAT01354)">
-<meta name="twitter:description" content="Apostila de estudo própria — Turma E1 (seg/qua/sex 18h30-20h10), profs. Arthur Miranda e Julio Lombaldo.">
+<meta name="twitter:description" content="Apostilas de estudo próprias — Turma E1 (seg/qua/sex 18h30-20h10), profs. Arthur Miranda e Julio Lombaldo.">
 <meta name="twitter:image" content="https://material-de-apoio-acervo.github.io/MAT01354-calculo-geometria-analitica-II-A/og-image.png">
-<!-- GoatCounter: analytics de visitas + eventos de clique (downloads). Painel: https://mat01354-calculo.goatcounter.com -->
+<link rel="preload" as="image" href="caderno.webp" type="image/webp" fetchpriority="high">
+<!-- GoatCounter: visitas (automático) + downloads separados por apostila
+     (eventos "download-apostila-area1" e "download-apostila-area2"). Painel: https://mat01354-calculo.goatcounter.com -->
 <script data-goatcounter="https://mat01354-calculo.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+<script>
+  // Cache-busting: anexado como ?v=... em todo link de PDF (ver script no fim da página).
+  // Trocar para a data de hoje (AAAAMMDD) sempre que QUALQUER PDF for substituído;
+  // se publicar mais de uma vez no mesmo dia, acrescentar v2, v3... (ex.: "20261027v2").
+  const VERSAO_PUBLICACAO = "20261027";
+</script>
 <style>
+  /*
+    Layout medido em "Página do Curso com Caderno Preto.png" (1536 x 1024 px).
+    No desktop, 1rem = 1/96 da largura ou 1/64 da altura da janela (o que for menor):
+    a página inteira mantém as proporções da referência e cabe na tela sem rolagem.
+    Valores em rem = (medida em px na referência) / 16.
+  */
+  html { font-size: clamp(9px, min(1.0417vw, 1.5625vh), 20px); -webkit-text-size-adjust: 100%; }
   :root {
-    --bg: #f7f7f5;
-    --card-bg: #ffffff;
-    --text: #1f2430;
-    --muted: #6b7280;
-    --navy: #14285a;
-    --navy-soft: #eef1fa;
-    --gold: #b07814;
-    --border: #e5e5e0;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --bg: #14171c;
-      --card-bg: #1c2028;
-      --text: #e8e8e6;
-      --muted: #9aa0aa;
-      --navy: #7d93e0;
-      --navy-soft: #1e2536;
-      --gold: #d8a94a;
-      --border: #2b303a;
-    }
+    --text: #f4f6fa;
+    --soft: #abbcd6;
+    --lead: #b4c0d6;
+    --muted: #a0abc0;
+    --accent: #6f86ec;
+    --pill: #22398f;
+    --card: #181e28;
+    --card-border: #262e3d;
+    --ico-bg: #151b25;
+    --btn: #3d5ddf;
+    --btn-hover: #4c6bee;
+    --aviso: #f0b43c;
   }
   * { box-sizing: border-box; }
   body {
     margin: 0;
-    background: var(--bg);
+    min-height: 100vh;
     color: var(--text);
-    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
-    line-height: 1.5;
+    font-family: "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.45;
+    background-color: #12161d;
+    background-image:
+      radial-gradient(ellipse 33rem 27rem at calc(50% + 30.1rem) 10.6rem, #2b323f 0%, #252b37 30%, #1c212b 62%, rgba(18,22,29,0) 100%),
+      radial-gradient(ellipse 16rem 7rem at calc(50% + 15.5rem) 29.8rem, rgba(40,46,58,.85) 0%, rgba(40,46,58,0) 100%),
+      linear-gradient(180deg, #13171e 0%, #11141b 100%);
+    background-repeat: no-repeat;
   }
-  header {
-    padding: 3rem 1.5rem 2rem;
-    text-align: center;
-  }
-  header .code {
-    display: inline-block;
-    font-size: 0.8rem;
-    letter-spacing: 0.08em;
-    color: var(--navy);
-    background: var(--navy-soft);
-    padding: 0.25rem 0.75rem;
-    border-radius: 999px;
-    font-weight: 600;
-    margin-bottom: 0.75rem;
-  }
-  header h1 {
-    margin: 0 0 0.4rem;
-    font-size: 1.7rem;
-  }
-  header p {
-    margin: 0;
-    color: var(--muted);
-    font-size: 0.95rem;
-  }
-  header p.profs {
-    margin-top: 0.6rem;
-    font-size: 0.8rem;
-  }
-  main {
-    max-width: 720px;
+  a { color: var(--accent); }
+  .wrap {
+    position: relative;
+    width: 72.6rem;           /* 1162 px */
+    min-height: 64rem;        /* 1024 px */
     margin: 0 auto;
-    padding: 0 1.5rem 4rem;
+    display: flex;
+    flex-direction: column;
   }
-  section {
-    margin-bottom: 2rem;
+
+  /* ---------- topo ---------- */
+  .caderno {
+    position: absolute;
+    left: 47.7rem;            /* 950 - 187 */
+    top: 2.5rem;              /* 40 */
+    width: 26.9rem;           /* 430 */
+    height: auto;
+    pointer-events: none;
+    user-select: none;
   }
-  section h2 {
-    font-size: 1.05rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--muted);
-    margin: 0 0 0.75rem;
+  .hero { position: relative; z-index: 1; padding-top: 4.7rem; }   /* topo do selo: 95 */
+  .pill {
+    display: inline-block;
+    background: var(--pill);
+    color: #fff;
+    font-weight: 700;
+    font-size: 1.06rem;
+    line-height: 2.69rem;     /* 43 */
+    letter-spacing: .14em;
+    padding: 0 1.25rem;
+    border-radius: 999px;
   }
-  .card {
-    background: var(--card-bg);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    overflow: hidden;
+  h1 {
+    margin: 1rem 0 1.1rem;
+    font-size: 4rem;          /* 64 */
+    line-height: 1.12;
+    font-weight: 700;
+    letter-spacing: -.01em;
   }
-  .item {
+  .lead { margin: 0 0 1.3rem; max-width: 44rem; font-size: 1.5rem; color: var(--lead); }
+  .info { list-style: none; margin: 0; padding: 0; }
+  .info li {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    padding: 1rem 1.25rem;
-    border-bottom: 1px solid var(--border);
-    text-decoration: none;
-    color: var(--text);
+    gap: 1.4rem;
+    height: 2.75rem;
+    font-size: 1.19rem;
+    color: var(--soft);
   }
-  .item:last-child { border-bottom: none; }
-  .item .label {
-    font-weight: 600;
-  }
-  .item .sub {
-    font-size: 0.82rem;
-    color: var(--muted);
-  }
-  .item .tag {
-    flex-shrink: 0;
-    font-size: 0.78rem;
-    padding: 0.3rem 0.7rem;
-    border-radius: 999px;
-    font-weight: 600;
-  }
-  .tag.ready {
-    background: var(--navy-soft);
-    color: var(--navy);
-  }
-  .tag.pending {
-    background: transparent;
-    color: var(--muted);
-    border: 1px dashed var(--border);
-  }
-  a.item[href="#"] {
-    cursor: default;
-    opacity: 0.6;
-  }
-  footer {
-    text-align: center;
-    color: var(--muted);
-    font-size: 0.8rem;
-    padding-bottom: 2rem;
-  }
-  footer a { color: var(--navy); }
-  .btn {
-    display: inline-block;
-    font: inherit;
-    font-weight: 600;
-    font-size: 0.9rem;
-    padding: 0.55rem 1.1rem;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-    text-decoration: none;
-    background: var(--navy);
-    color: #fff;
-  }
-  .btn:disabled { opacity: 0.6; cursor: default; }
-  .btn.secondary {
-    background: transparent;
-    color: var(--navy);
-    border: 1px solid var(--border);
-  }
-  .btn-google {
+  .info li b { color: var(--text); font-weight: 400; }
+  .info svg { flex: none; width: 1.6rem; height: 1.6rem; color: var(--accent); }
+  .aviso {
     display: inline-flex;
     align-items: center;
-    gap: 0.65rem;
-    font: inherit;
+    gap: .8rem;
+    margin-top: .9rem;
+    padding: .6rem 1.1rem;
+    border: 1px solid rgba(240,180,60,.5);
+    background: rgba(240,180,60,.08);
+    border-radius: .65rem;
+    font-size: 1.06rem;
+  }
+  .aviso svg { flex: none; width: 1.4rem; height: 1.4rem; color: var(--aviso); }
+  .aviso strong { color: var(--aviso); }
+
+  /* ---------- apostilas ---------- */
+  .secao-titulo {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin: 1.9rem 0 1.35rem;
+    font-size: 1.375rem;      /* 22 */
+    font-weight: 700;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    color: var(--soft);
+  }
+  .secao-titulo::after { content: ""; flex: 1; height: 1px; background: var(--card-border); }
+  .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
+  .card {
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem 1.8rem;
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: .75rem;
+  }
+  .card .topo { display: flex; align-items: center; gap: 1.2rem; margin-bottom: .8rem; }
+  .card .ico {
+    flex: none;
+    width: 4.6rem; height: 4.6rem;
+    display: grid; place-items: center;
+    border: 1px solid var(--card-border);
+    border-radius: .75rem;
+    background: var(--ico-bg);
+  }
+  .card .ico svg { width: 2.5rem; height: 2.5rem; color: var(--accent); }
+  .card h2 { margin: 0; font-size: 1.6rem; line-height: 1.2; font-weight: 700; }
+  .card p { margin: 0; font-size: 1.15rem; line-height: 1.45; color: var(--muted); }
+  .card .meta { margin: .4rem 0 1rem; font-size: .95rem; color: var(--accent); }
+  .card .btn { margin-top: auto; }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .75rem;
+    padding: .85rem 1.5rem;
+    background: var(--btn);
+    color: #fff;
     font-weight: 600;
-    font-size: 0.9rem;
-    padding: 0.55rem 1.2rem 0.55rem 0.85rem;
-    border-radius: 8px;
-    border: 1px solid #dadce0;
-    background: #ffffff;
-    color: #3c4043;
-    cursor: pointer;
+    font-size: 1.2rem;
     text-decoration: none;
+    border-radius: .45rem;
+    transition: background .15s, transform .15s;
+    white-space: nowrap;
   }
-  .btn-google:hover { background: #f7f7f7; }
-  .btn-google svg { width: 18px; height: 18px; flex: none; }
-  #apostila-status .label { margin-bottom: 0.4rem; }
-  #apostila-status .sub { margin-bottom: 0.75rem; }
-  #apostila-status .linha-sair {
-    margin-top: 0.6rem;
-    font-size: 0.78rem;
+  .btn:hover { background: var(--btn-hover); transform: translateY(-1px); }
+  .btn:focus-visible { outline: 3px solid #a9b8ff; outline-offset: 2px; }
+  .btn svg { width: 1.4rem; height: 1.4rem; }
+  /* card reservado (apostila ainda não disponível) */
+  .card.em-breve { background: rgba(24,30,40,.45); border-style: dashed; }
+  .card.em-breve .ico svg, .card.em-breve .meta { color: #6b7790; }
+  .card.em-breve h2 { color: #c3cad8; }
+  .btn.desativado {
+    background: transparent;
+    color: #8792a8;
+    border: 1px dashed #3a4356;
+    cursor: default;
   }
-  #apostila-status .linha-sair a { color: var(--muted); }
+  .btn.desativado:hover { transform: none; }
+
+  footer {
+    margin-top: auto;
+    padding: 1.3rem 0 1.5rem;
+    text-align: center;
+    font-size: 1.06rem;
+    color: #b4bdcc;
+  }
+
+  /* ---------- celular e tablet em pé ---------- */
+  @media (max-width: 900px) {
+    html { font-size: 16px; }
+    body {
+      background-image:
+        radial-gradient(ellipse 230px 200px at 50% 128px, #2b323f 0%, #252b37 30%, #1c212b 62%, rgba(18,22,29,0) 100%),
+        linear-gradient(180deg, #13171e 0%, #11141b 100%);
+    }
+    .wrap { width: auto; min-height: 100vh; padding: 0 16px; }
+    .caderno { position: static; display: block; width: 210px; margin: 8px auto -10px; }
+    .hero { padding-top: 0; }
+    .pill { font-size: 12px; line-height: 30px; padding: 0 14px; }
+    h1 { font-size: 34px; margin: 14px 0 12px; }
+    .lead { font-size: 17px; margin-bottom: 16px; max-width: none; }
+    .lead .quebra { display: none; }
+    .info li { height: auto; align-items: flex-start; gap: 14px; font-size: 15px; margin-bottom: 12px; }
+    .info svg { width: 21px; height: 21px; }
+    .aviso { display: flex; align-items: flex-start; font-size: 15px; margin-top: 6px; }
+    .aviso svg { width: 20px; height: 20px; }
+    .secao-titulo { font-size: 16px; margin: 30px 0 16px; gap: 14px; }
+    .cards { grid-template-columns: 1fr; gap: 14px; }
+    .card { padding: 20px; }
+    .card .topo { gap: 14px; margin-bottom: 10px; }
+    .card .ico { width: 56px; height: 56px; }
+    .card .ico svg { width: 30px; height: 30px; }
+    .card h2 { font-size: 21px; }
+    .card p { font-size: 15px; }
+    .card .meta { font-size: 13px; margin: 6px 0 14px; }
+    .btn { font-size: 17px; padding: 13px 18px; }
+    .btn svg { width: 20px; height: 20px; }
+    footer { font-size: 15px; padding: 32px 0 24px; }
+  }
 </style>
-<script>
-  // Login Google + aprovação (Firebase). Foi desativado temporariamente em 05/09
-  // (conta Google do curso suspensa pelo Google) e reativado em 06/09 depois que
-  // a conta foi liberada. Ver BACKLOG.md item 5 se precisar desativar de novo.
-  const APOSTILA_LOGIN_ATIVO = true;
-</script>
 </head>
 <body>
+<div class="wrap">
 
-<header>
-  <span class="code">MAT01354 · IME-UFRGS</span>
-  <h1>Cálculo e Geometria Analítica II-A</h1>
-  <p>Material de estudo próprio, produzido a partir das aulas do curso.</p>
-  <p class="profs">Turma E1 (segunda, quarta e sexta 18h30 - 20h10)</p>
-  <p class="profs">Professores: Arthur Miranda do Espírito Santo · Julio Cesar Lombaldo Fernandes</p>
-  <p class="profs">Semestre: 2026/2</p>
-</header>
+  <img class="caderno" src="caderno.webp" width="430" height="500" alt="" fetchpriority="high" decoding="async">
 
-<main>
-  <section>
-    <h2>Apostila</h2>
-    <div class="card">
-      <div class="item" style="cursor: default; justify-content: center; text-align: center;">
-        <div id="apostila-status">
-          <div class="label">Carregando…</div>
-        </div>
-      </div>
+  <header class="hero">
+    <span class="pill">MAT01354 · IME-UFRGS</span>
+    <h1>Cálculo e Geometria<br>Analítica II-A</h1>
+    <p class="lead">Notas de aula produzidas de forma colaborativa —<br class="quebra"> não é uma apostila oficial elaborada pelos professores.</p>
+    <ul class="info">
+      <li>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="16" rx="2"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/></svg>
+        <span>Turma E1 (segunda, quarta e sexta 18h30 - 20h10)</span>
+      </li>
+      <li>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>
+        <span><b>Professores:</b> Arthur Miranda do Espírito Santo · Julio Cesar Lombaldo Fernandes</span>
+      </li>
+      <li>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c0 1.5 2.7 3 6 3s6-1.5 6-3v-5"/></svg>
+        <span><b>Semestre:</b> 2026/2</span>
+      </li>
+    </ul>
+    <div class="aviso" role="note">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9.5 16.5h-19z"/><path d="M12 10v4.5M12 17.6v.1"/></svg>
+      <span>Aviso: Prova da Área 2 — <strong>04/11/2026</strong> (quarta-feira)</span>
     </div>
-  </section>
+  </header>
 
-  <section id="secao-fotos-quadro" hidden>
-    <h2>Colabore com fotos do quadro</h2>
-    <div class="card" style="border: 2px solid var(--gold);">
-      <div class="item" style="cursor: default; justify-content: center; text-align: center;">
-        <div>
-          <div class="label" id="label-fotos-quadro">Colabore com fotos do quadro</div>
-          <div class="sub">Envie pelo formulário (fotos + data da aula) — ajuda a manter a apostila atualizada.</div>
-          <a class="btn secondary" id="link-form-fotos" href="#" target="_blank" rel="noopener"
-             data-goatcounter-click="form-fotos-quadro" data-goatcounter-title="clique: form-fotos-quadro">Enviar fotos do quadro</a>
-        </div>
-      </div>
+  <main>
+    <div class="secao-titulo">Apostilas</div>
+    <div class="cards">
+      <section class="card" aria-labelledby="t-area1">
+        <div class="topo"><div class="ico"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round" aria-hidden="true"><path d="M12 4h17l9 9v31H12z"/><path d="M29 4v9h9"/><text x="25" y="35" fill="currentColor" stroke="none" font-size="11" font-weight="700" font-family="Segoe UI, Arial, sans-serif" text-anchor="middle">PDF</text></svg></div><h2 id="t-area1">Apostila — Área 1</h2></div>
+        <p>Vetores, retas e planos, derivadas parciais, máximos, mínimos e Lagrange.</p>
+        <div class="meta">Aulas 1 a 16 · encerrada em 14/09/2026</div>
+        <a class="btn pdf" href="apostilas/apostila-area1.pdf" target="_blank" rel="noopener"
+           data-goatcounter-click="download-apostila-area1" data-goatcounter-title="download: apostila área 1">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M4 20h16"/></svg>
+          Acessar apostila
+        </a>
+      </section>
+
+      <section class="card" aria-labelledby="t-area2">
+        <div class="topo"><div class="ico"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round" aria-hidden="true"><path d="M12 4h17l9 9v31H12z"/><path d="M29 4v9h9"/><text x="25" y="35" fill="currentColor" stroke="none" font-size="11" font-weight="700" font-family="Segoe UI, Arial, sans-serif" text-anchor="middle">PDF</text></svg></div><h2 id="t-area2">Apostila — Área 2</h2></div>
+        <p>Integrais duplas e triplas, integrais de linha, campos conservativos e Green.</p>
+        <div class="meta">Aulas 17 a 29 · encerrada em 26/10/2026</div>
+        <a class="btn pdf" href="apostilas/apostila-area2.pdf" target="_blank" rel="noopener"
+           data-goatcounter-click="download-apostila-area2" data-goatcounter-title="download: apostila área 2">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M4 20h16"/></svg>
+          Acessar apostila
+        </a>
+      </section>
+
+      <!-- Área 3: quando a apostila existir, trocar a classe "em-breve" por nada, o <span>
+           por um <a class="btn pdf" href="apostilas/apostila-area3.pdf" ...> com
+           data-goatcounter-click="download-apostila-area3", e atualizar a linha "meta". -->
+      <section class="card em-breve" aria-labelledby="t-area3">
+        <div class="topo"><div class="ico"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round" aria-hidden="true"><path d="M12 4h17l9 9v31H12z"/><path d="M29 4v9h9"/><text x="25" y="35" fill="currentColor" stroke="none" font-size="11" font-weight="700" font-family="Segoe UI, Arial, sans-serif" text-anchor="middle">PDF</text></svg></div><h2 id="t-area3">Apostila — Área 3</h2></div>
+        <p>Sequências e séries (Prof. Julio Lombaldo).</p>
+        <div class="meta">Em preparação</div>
+        <span class="btn desativado" aria-disabled="true">Em breve</span>
+      </section>
     </div>
-  </section>
-</main>
+  </main>
 
-<footer>
-  Parte do <a href="https://material-de-apoio-acervo.github.io/material-de-apoio-acervo/">Material de Apoio — acervo</a>
-</footer>
+  <footer>
+    Parte do <a href="https://material-de-apoio-acervo.github.io/material-de-apoio-acervo/">Material de Apoio — acervo</a>
+  </footer>
 
-<script src="firebase-config.js"></script>
-<script type="module">
-  // Login desativado (ver APOSTILA_LOGIN_ATIVO no <head>): todo o código abaixo
-  // que toca o Firebase fica dentro deste "if", pra não fazer nenhuma chamada
-  // (nem inicializar o app) enquanto a conta Google do curso estiver suspensa.
-  // Os imports em si só baixam o SDK (sem chamar nada), então são inofensivos.
-if (APOSTILA_LOGIN_ATIVO) {
-  const { initializeApp } = await import("https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js");
-  const {
-    getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged
-  } = await import("https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js");
-  const {
-    getFirestore, doc, getDoc, setDoc, updateDoc, serverTimestamp
-  } = await import("https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js");
+</div>
 
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
-  const provider = new GoogleAuthProvider();
-
-  const statusEl = document.getElementById('apostila-status');
-
-  function render(html) {
-    statusEl.innerHTML = html;
-  }
-
-  // Escapa HTML antes de inserir em innerHTML -- defesa em profundidade contra
-  // XSS (a barreira de verdade já está nas regras do Firestore, que travam
-  // "nome" contra o valor real confirmado pelo Google).
-  function esc(s) {
-    return String(s ?? '').replace(/[&<>"']/g, c => ({
-      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
-    }[c]));
-  }
-
-  function linhaSair() {
-    return `<div class="linha-sair"><a href="#" id="btn-sair">sair</a></div>`;
-  }
-
-  async function renderEstado(user) {
-    // "Colabore com fotos do quadro": visível pra qualquer aluno logado
-    // (independente de já ter acesso aprovado à apostila ou não), só some se
-    // o link do Form ainda não foi configurado.
-    const secaoFotos = document.getElementById('secao-fotos-quadro');
-    secaoFotos.hidden = !(user && FORM_FOTOS_QUADRO_URL);
-    if (user && FORM_FOTOS_QUADRO_URL) {
-      document.getElementById('link-form-fotos').href = FORM_FOTOS_QUADRO_URL;
-      document.getElementById('label-fotos-quadro').textContent = FORM_FOTOS_QUADRO_LABEL || 'Colabore com fotos do quadro';
-    }
-
-    if (!user) {
-      render(`
-        <div class="label">Acesso à apostila</div>
-        <div class="sub">A apostila é compartilhada por uma pasta do Google Drive. Entre com sua conta Google e peça acesso.</div>
-        <button class="btn-google" id="btn-entrar">
-          <svg viewBox="0 0 48 48" aria-hidden="true">
-            <path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.9 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.1 8 3l5.7-5.7C34.6 6.1 29.6 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.2-.1-2.4-.4-3.5z"/>
-            <path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.6 15.9 18.9 13 24 13c3.1 0 5.8 1.1 8 3l5.7-5.7C34.6 6.1 29.6 4 24 4 16.3 4 9.6 8.3 6.3 14.7z"/>
-            <path fill="#4CAF50" d="M24 44c5.5 0 10.5-2.1 14.3-5.6l-6.6-5.6C29.6 34.7 26.9 36 24 36c-5.3 0-9.7-3.1-11.3-7.4l-6.6 5.1C9.5 39.6 16.2 44 24 44z"/>
-            <path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.3 4.3-4.2 5.7l6.6 5.6C41.8 36.4 44 30.7 44 24c0-1.2-.1-2.4-.4-3.5z"/>
-          </svg>
-          Entrar com Google
-        </button>
-      `);
-      document.getElementById('btn-entrar').onclick = () => signInWithPopup(auth, provider).catch((e) => {
-        console.error(e);
-        alert('Não foi possível entrar. Tente novamente.');
-      });
-      return;
-    }
-
-    const ref = doc(db, 'acessos', user.uid);
-    let snap;
-    try {
-      snap = await getDoc(ref);
-    } catch (e) {
-      console.error(e);
-      render(`<div class="label">Erro ao carregar</div><div class="sub">Tente recarregar a página.</div>${linhaSair()}`);
-      document.getElementById('btn-sair').onclick = (e2) => { e2.preventDefault(); signOut(auth); };
-      return;
-    }
-
-    if (!snap.exists()) {
-      render(`
-        <div class="label">Olá, ${esc(user.displayName?.split(' ')[0] ?? '')}!</div>
-        <div class="sub">Você ainda não solicitou acesso à apostila.</div>
-        <button class="btn" id="btn-solicitar">Solicitar acesso</button>
-        ${linhaSair()}
-      `);
-      document.getElementById('btn-solicitar').onclick = async (ev) => {
-        ev.target.disabled = true;
-        try {
-          await setDoc(ref, {
-            nome: user.displayName || '',
-            email: user.email || '',
-            status: 'pendente',
-            data: serverTimestamp(),
-          });
-          renderEstado(user);
-        } catch (e) {
-          console.error(e);
-          alert('Erro ao enviar o pedido. Tente novamente.');
-          ev.target.disabled = false;
-        }
-      };
-    } else {
-      const d = snap.data();
-      if (d.status === 'aprovado') {
-        render(`
-          <div class="label">Acesso aprovado ✅</div>
-          <div class="sub">Bem-vindo(a) de volta, ${esc(user.displayName?.split(' ')[0] ?? '')}.</div>
-          <a class="btn" href="${DRIVE_FOLDER_URL}" target="_blank" rel="noopener"
-             data-goatcounter-click="download-apostila" data-goatcounter-title="download: apostila">Baixar apostila</a>
-          ${linhaSair()}
-        `);
-      } else if (d.status === 'recusado' || d.status === 'revogado') {
-        const titulo = d.status === 'recusado' ? 'Pedido não aprovado' : 'Acesso revogado';
-        render(`
-          <div class="label">${titulo}</div>
-          <div class="sub">Fale com o organizador se achar que isso é um engano, ou solicite novamente.</div>
-          <button class="btn secondary" id="btn-solicitar-de-novo">Solicitar novamente</button>
-          ${linhaSair()}
-        `);
-        document.getElementById('btn-solicitar-de-novo').onclick = async (ev) => {
-          ev.target.disabled = true;
-          try {
-            await updateDoc(ref, { status: 'pendente', data: serverTimestamp() });
-            renderEstado(user);
-          } catch (e) {
-            console.error(e);
-            alert('Erro ao enviar o pedido. Tente novamente.');
-            ev.target.disabled = false;
-          }
-        };
-      } else {
-        render(`
-          <div class="label">Pedido enviado ⏳</div>
-          <div class="sub">Aguardando aprovação.</div>
-          ${linhaSair()}
-        `);
-      }
-    }
-
-    const sair = document.getElementById('btn-sair');
-    if (sair) sair.onclick = (e) => { e.preventDefault(); signOut(auth); };
-  }
-
-  onAuthStateChanged(auth, renderEstado);
-} // fim do if (APOSTILA_LOGIN_ATIVO)
+<script>
+  // Cache-busting: força o navegador/celular a baixar a versão nova do PDF.
+  document.querySelectorAll('a.pdf').forEach(function (a) {
+    a.href = a.getAttribute('href') + '?v=' + VERSAO_PUBLICACAO;
+  });
 </script>
-
 </body>
 </html>
