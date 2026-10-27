@@ -51,6 +51,9 @@
     --aviso: #f0b43c;
   }
   * { box-sizing: border-box; }
+  /* o caderno passa um pouco da borda da coluna; impede a rolagem horizontal */
+  html, body { overflow-x: hidden; }
+  @supports (overflow: clip) { html, body { overflow-x: clip; } }
   body {
     margin: 0;
     min-height: 100vh;
