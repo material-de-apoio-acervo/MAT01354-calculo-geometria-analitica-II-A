@@ -186,6 +186,31 @@
   .btn:hover { background: var(--btn-hover); transform: translateY(-1px); }
   .btn:focus-visible { outline: 3px solid #a9b8ff; outline-offset: 2px; }
   .btn svg { width: 1.4rem; height: 1.4rem; }
+
+  /* status de cada apostila: selo sobre a borda do card */
+  .card { position: relative; }
+  .selo {
+    position: absolute;
+    top: -.72rem; left: 1.6rem;
+    display: inline-flex; align-items: center; gap: .45rem;
+    padding: .18rem .7rem;
+    font-size: .72rem; font-weight: 700; letter-spacing: .12em;
+    border-radius: 999px;
+    background: #1c2230; color: #8c97ab; border: 1px solid #343d50;
+  }
+  .card.ativa .selo { background: #10261d; color: #5fd49a; border-color: #2f7a55; }
+  .selo .ponto { width: .5rem; height: .5rem; border-radius: 50%; background: #3ddc84; animation: pulso 1.8s ease-in-out infinite; }
+  @keyframes pulso { 0%,100% { box-shadow: 0 0 0 0 rgba(61,220,132,.55); } 50% { box-shadow: 0 0 0 .32rem rgba(61,220,132,0); } }
+  @media (prefers-reduced-motion: reduce) { .selo .ponto { animation: none; } }
+  /* card em vigor: borda azul com brilho e fundo um pouco mais claro */
+  .card.ativa {
+    border-color: #4a63d8;
+    background: #1b2233;
+    box-shadow: 0 0 0 1px rgba(74,99,216,.35), 0 0 28px rgba(63,93,224,.22);
+  }
+  /* apostilas encerradas: botão contornado */
+  .btn.contorno { background: transparent; color: #b7c4ff; border: 1px solid #4a5a9a; }
+  .btn.contorno:hover { background: rgba(63,93,224,.15); }
   /* card reservado (apostila ainda não disponível) */
   .card.em-breve { background: rgba(24,30,40,.45); border-style: dashed; }
   .card.em-breve .ico svg, .card.em-breve .meta { color: #6b7790; }
@@ -226,7 +251,11 @@
     .aviso { display: flex; align-items: flex-start; font-size: 15px; margin-top: 6px; }
     .aviso svg { width: 20px; height: 20px; }
     .secao-titulo { font-size: 16px; margin: 30px 0 16px; gap: 14px; }
-    .cards { grid-template-columns: 1fr; gap: 14px; }
+    .cards { grid-template-columns: 1fr; gap: 22px; }
+    /* no celular: da mais atual para a mais antiga (3, 2, 1) */
+    .cards > .card:nth-child(1) { order: 3; }
+    .cards > .card:nth-child(2) { order: 2; }
+    .cards > .card:nth-child(3) { order: 1; }
     .card { padding: 20px; }
     .card .topo { gap: 14px; margin-bottom: 10px; }
     .card .ico { width: 56px; height: 56px; }
@@ -273,10 +302,11 @@
     <div class="secao-titulo">Apostilas</div>
     <div class="cards">
       <section class="card" aria-labelledby="t-area1">
+        <span class="selo">ENCERRADA</span>
         <div class="topo"><div class="ico"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round" aria-hidden="true"><path d="M12 4h17l9 9v31H12z"/><path d="M29 4v9h9"/><text x="25" y="35" fill="currentColor" stroke="none" font-size="11" font-weight="700" font-family="Segoe UI, Arial, sans-serif" text-anchor="middle">PDF</text></svg></div><h2 id="t-area1">Apostila — Área 1</h2></div>
         <p>Vetores, retas e planos, derivadas parciais, máximos, mínimos e Lagrange.</p>
         <div class="meta">Aulas 1 a 16 · encerrada em 14/09/2026</div>
-        <a class="btn pdf" href="apostilas/apostila-area1.pdf" target="_blank" rel="noopener"
+        <a class="btn pdf contorno" href="apostilas/apostila-area1.pdf" target="_blank" rel="noopener"
            data-goatcounter-click="download-apostila-area1" data-goatcounter-title="download: apostila área 1">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M4 20h16"/></svg>
           Acessar apostila
@@ -284,20 +314,22 @@
       </section>
 
       <section class="card" aria-labelledby="t-area2">
+        <span class="selo">ENCERRADA</span>
         <div class="topo"><div class="ico"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round" aria-hidden="true"><path d="M12 4h17l9 9v31H12z"/><path d="M29 4v9h9"/><text x="25" y="35" fill="currentColor" stroke="none" font-size="11" font-weight="700" font-family="Segoe UI, Arial, sans-serif" text-anchor="middle">PDF</text></svg></div><h2 id="t-area2">Apostila — Área 2</h2></div>
         <p>Integrais duplas e triplas, integrais de linha, campos conservativos e Green.</p>
         <div class="meta">Aulas 17 a 29 · encerrada em 26/10/2026</div>
-        <a class="btn pdf" href="apostilas/apostila-area2.pdf" target="_blank" rel="noopener"
+        <a class="btn pdf contorno" href="apostilas/apostila-area2.pdf" target="_blank" rel="noopener"
            data-goatcounter-click="download-apostila-area2" data-goatcounter-title="download: apostila área 2">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M4 20h16"/></svg>
           Acessar apostila
         </a>
       </section>
 
-      <section class="card" aria-labelledby="t-area3">
+      <section class="card ativa" aria-labelledby="t-area3">
+        <span class="selo"><span class="ponto" aria-hidden="true"></span>EM ANDAMENTO</span>
         <div class="topo"><div class="ico"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round" aria-hidden="true"><path d="M12 4h17l9 9v31H12z"/><path d="M29 4v9h9"/><text x="25" y="35" fill="currentColor" stroke="none" font-size="11" font-weight="700" font-family="Segoe UI, Arial, sans-serif" text-anchor="middle">PDF</text></svg></div><h2 id="t-area3">Apostila — Área 3</h2></div>
         <p>Sequências e séries (Prof. Julio Lombaldo).</p>
-        <div class="meta">Aula 30 · atualizada até a Aula 30 em 06/11/2026</div>
+        <div class="meta">Atualizada em 06/11/2026 (Aula 30)</div>
         <a class="btn pdf" href="apostilas/apostila-area3.pdf" target="_blank" rel="noopener"
            data-goatcounter-click="download-apostila-area3" data-goatcounter-title="download: apostila área 3">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M4 20h16"/></svg>
